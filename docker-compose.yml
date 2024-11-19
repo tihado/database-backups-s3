@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   backup-script:
@@ -14,3 +14,4 @@ services:
       DATABASES: ${DATABASES}
       RUN_ON_STARTUP: ${RUN_ON_STARTUP}
       CRON: ${CRON}
+      RETENTION_DAYS: ${RETENTION_DAYS}
