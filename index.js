@@ -151,12 +151,25 @@ async function processClearOldFiles() {
       Bucket: config.aws.s3_bucket,
     };
     const getListCommand = new s3.ListObjectsV2Command(params);
-    const { Contents, IsTruncated } = await s3Client.send(getListCommand);
 
-    // TODO: handle truncate
+    const files = [];
+    let remainObjects = false;
+    do {
+      const { Contents, NextContinuationToken } = await s3Client.send(
+        getListCommand
+      );
+      files.push(...Contents);
+
+      if (NextContinuationToken) {
+        getListCommand.ContinuationToken = NextContinuationToken;
+        remainObjects = true;
+      } else {
+        remainObjects = false;
+      }
+    } while (remainObjects);
 
     // 2. Filter old files
-    const removeFiles = Contents?.reduce((acc, file) => {
+    const removeFiles = files.reduce((acc, file) => {
       const fileDate = new Date(file.LastModified);
       if (fileDate < endDate) {
         acc.push(file.Key);
