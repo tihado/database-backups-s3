@@ -142,7 +142,7 @@ async function processClearOldFiles() {
     return;
   }
   const endDate = new Date(
-    new Date().getDate() - config.retentionDays * 24 * 60 * 60 * 1000
+    new Date().getTime() - config.retentionDays * 24 * 60 * 60 * 1000
   );
 
   try {
